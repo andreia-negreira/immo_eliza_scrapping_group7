@@ -3,14 +3,14 @@ import requests
 import json
 import re
 
-def get_links():
+def get_links(pagesToSearch=1):
     """
     Function that gets links of all houses
     """
     s = requests.Session()
     listOfLinks = []
     listOfLinksFinal = []
-    pagesToSearch = 10 # set the number according to how many pages you want to sarch thru
+    #pagesToSearch = 1 # set the number according to how many pages you want to sarch thru each of properties set
     propertiesToSearch = ["house","apartment"] # fill the list with propertis to search
 
     for prop in propertiesToSearch:
@@ -25,16 +25,7 @@ def get_links():
             listOfLinks.clear()
     return(listOfLinksFinal)
 
-links = get_links()
+links = get_links(2)
 
-
-"""
-def get_data():
-    url ="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, "html.parser")
-    data = soup.find('div',attrs = {"class":"container-main-content"}).script.text
-    test = re.findall(r"window.classified = ({.*})", data)
-    result = json.loads(test[0]) # Data dictionary 
-    return result
-"""
+with open('links.txt','w+') as file:
+    file.write('\n'.join(links))
