@@ -37,22 +37,66 @@ def get_links():
         listOfLinksFinal = listOfLinksFinal + listOfLinks
         listOfLinks.clear()
 
-    return(listOfLinksFinal)
+    return(listOfLinksFinal)    
+
+def get_data():
+    url="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
+    req= requests.get(url)
+
+    soup= BeautifulSoup(req.text, "html.parser")
+    data = soup.find('div',attrs={"class":"container-main-content"}).script.text
+
+    Raw_data_InList= re.findall(r"window.classified = (\{.*\})", data)
+    Raw_data_InDict = json.loads(Raw_data_InList[0]) # Data dictionary
+
+
+    property_dict = {}
+    property_dict[url] = {}
+    try:
+        property_dict[url]["price"] = Raw_data_InDict["price"]["mainValue"]
+    except KeyError:
+        property_dict[url]["price"] = None
+
+    try:
+        property_dict[url]["Living area"] = Raw_data_InDict["netHabitableSurface"]
+    except KeyError:
+        property_dict[url]["Living area"] = None
+
+    try:
+        property_dict[url]["Nº rooms"] = Raw_data_InDict["property"]["bedroomCount"]
+    except KeyError:
+        property_dict[url]["Nº rooms"] = None
+        
+    try:
+        property_dict[url]["City"] = Raw_data_InDict["customers"][0]['location']['locality']
+    except KeyError:
+        property_dict[url]["City"] = None
+
+    try:
+        property_dict[url]["Kitchen"] = Raw_data_InDict["property"]["kitchen"]['type']
+    except KeyError:
+        property_dict[url]["Kitchen"] = None
+        
+    try:
+        property_dict[url]["Furnished"] = Raw_data_InDict["transaction"]["sale"]["isFurnished"]
+    except KeyError:
+        property_dict[url]["Furnished"] = None
+    return property_dict
     
-'''
-def scrapping_general():
-    link_immo = "https://www.immoweb.be/en/classified/house/for-sale/libin/6890/10657263"
-    r = requests.get(link_immo)
-    
-    s = requests.Session()
-    soup = BeautifulSoup(r.text, "html.parser")
-    
-    for elem in soup.find_all("td", attrs={"class": "classified-table__data"}):
-        print(elem.get(""))
-    
-scrapping_general()
+get_data()
+
+def save():
+        '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
+        data_immo = get_data()
+        dataframe_immo = pd.DataFrame(data_immo)
+        dataset_csv = dataframe_immo.to_csv("./dataset-immo.csv", sep=" ", index=False)
+        return dataset_csv
     
 
+save({'Name': ['Tom', 'Jack', 'nick', 'juli'],
+        'marks': [99, 98, 95, 90]})
+    
+'''
 
 def test():
     url_test = "https://www.immoweb.be/en/search-results/house/for-sale?customerIds=3151988&page=1&orderBy=newest"
@@ -64,26 +108,5 @@ py_dict = json.load(r)
 print(py_dict)
 '''
 
-def get_data():
-    url ="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, "html.parser")
-    data = soup.find('div',attrs = {"class":"container-main-content"}).script.text
-    test = re.findall(r"window.classified = ({.*})", data)
-    result = json.loads(test[0]) # Data dictionary
-
-    return result
-
-
-def save():
-        '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
-        data_immo = get_data()
-        dataframe_immo = pd.DataFrame(data_immo)
-        dataset_csv = dataframe_immo.to_csv("./dataset-immo.csv", sep=" ")
-        return dataset_csv
-    
-
-save({'Name': ['Tom', 'Jack', 'nick', 'juli'],
-        'marks': [99, 98, 95, 90]})
 
     
