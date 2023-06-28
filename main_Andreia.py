@@ -69,11 +69,14 @@ def get_data():
         property_dict[url]["Subtype of property"] = None
     
     try:
-        property_dict[url]["price"] = Raw_data_InDict["price"]["mainValue"]
+        property_dict[url]["Price"] = Raw_data_InDict["price"]["mainValue"]
     except KeyError:
-        property_dict[url]["price"] = None
-    
-    # type of sale (exclusion of life sales)
+        property_dict[url]["Price"] = None
+        
+    try:
+        property_dict[url]["Type of Transaction"] = Raw_data_InDict["transaction"]["type"]
+    except KeyError:
+        property_dict[url]["Type of Transaction"] = None
     
     try:
         property_dict[url]["Nº rooms"] = Raw_data_InDict["property"]["bedroomCount"]
@@ -102,21 +105,48 @@ def get_data():
     except KeyError:
         property_dict[url]["Furnished"] = None
     
-    # open fire (yes/no)
+    try:
+        if bool(Raw_data_InDict["fireplaceExists"]):
+            property_dict[url]["Fireplace"] = "Yes"
+    except KeyError:
+        property_dict[url]["Fireplace"] = "No"
     
-    # terrace (yes/no) --> if yes: area
+    try:
+        if bool(Raw_data_InDict["property"]["hasTerrace"]):
+            property_dict[url]["Terrace"] = "Yes"
+            property_dict[url]["Area Terrace"] = Raw_data_InDict["property"]["terraceSurface"]
+    except KeyError:
+        property_dict[url]["Terrace"] = "No"
     
-    # garden (yes/no) --> if yes: area
+    try:
+        if bool(Raw_data_InDict["property"]["hasGarden"]):
+            property_dict[url]["Garden"] = "Yes"
+            property_dict[url]["Area Garden"] = Raw_data_InDict["property"]["gardenSurface"]
+    except KeyError:
+        property_dict[url]["Garden"] = "No"
     
-    # surface of the land
+    try:
+        property_dict[url]["Land Surface"] = Raw_data_InDict["property"]["land"]["surface"]
+    except KeyError:
+        property_dict[url]["Land Surface"] = None
     
     # surface area of the plot of land
     
-    # number of facades
+    try:
+        property_dict[url]["Nº facades"] = Raw_data_InDict["property"]["building"]["facadeCount"]
+    except KeyError:
+        property_dict[url]["Nº facades"] = None
     
-    # swimming pool
-    
-    # state of the building (new, to be renovated, etc.)
+    try:
+        if bool(Raw_data_InDict["fhasSwimmingPool"]):
+            property_dict[url]["Swimming Pool"] = "Yes"
+    except KeyError:
+        property_dict[url]["Swimming Pool"] = "No"
+        
+    try:
+        property_dict[url]["State Building"] = Raw_data_InDict["property"]["building"]["condition"]
+    except KeyError:
+        property_dict[url]["State Building"] = None
             
     return property_dict
     
@@ -130,8 +160,7 @@ def save():
         return dataset_csv
     
 
-save({'Name': ['Tom', 'Jack', 'nick', 'juli'],
-        'marks': [99, 98, 95, 90]})
+save()
     
 '''
 
