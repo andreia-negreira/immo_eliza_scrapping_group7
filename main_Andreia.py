@@ -52,10 +52,33 @@ def get_data():
 
     property_dict = {}
     property_dict[url] = {}
+    
+    try:
+        property_dict[url]["Locality"] = Raw_data_InDict["customers"][0]['location']['locality']
+    except KeyError:
+        property_dict[url]["Locality"] = None
+        
+    try:
+        property_dict[url]["Type of property"] = Raw_data_InDict["property"]["type"]
+    except KeyError:
+        property_dict[url]["Type of property"] = None
+    
+    try:
+        property_dict[url]["Subtype of property"] = Raw_data_InDict["property"]["subtype"]
+    except KeyError:
+        property_dict[url]["Subtype of property"] = None
+    
     try:
         property_dict[url]["price"] = Raw_data_InDict["price"]["mainValue"]
     except KeyError:
         property_dict[url]["price"] = None
+    
+    # type of sale (exclusion of life sales)
+    
+    try:
+        property_dict[url]["Nº rooms"] = Raw_data_InDict["property"]["bedroomCount"]
+    except KeyError:
+        property_dict[url]["Nº rooms"] = None    
 
     try:
         property_dict[url]["Living area"] = Raw_data_InDict["netHabitableSurface"]
@@ -63,24 +86,38 @@ def get_data():
         property_dict[url]["Living area"] = None
 
     try:
-        property_dict[url]["Nº rooms"] = Raw_data_InDict["property"]["bedroomCount"]
+        if bool(Raw_data_InDict["property"]["kitchen"]['type']):
+            property_dict[url]["Equipped kitchen"] = "Yes"
     except KeyError:
-        property_dict[url]["Nº rooms"] = None
+        property_dict[url]["Equipped kitchen"] = "No"
         
     try:
-        property_dict[url]["City"] = Raw_data_InDict["customers"][0]['location']['locality']
+        if bool(Raw_data_InDict["transaction"]["sale"]["isFurnished"]):
+            property_dict[url]["Furnished"] = "Yes"
     except KeyError:
-        property_dict[url]["City"] = None
-
-    try:
-        property_dict[url]["Kitchen"] = Raw_data_InDict["property"]["kitchen"]['type']
-    except KeyError:
-        property_dict[url]["Kitchen"] = None
+        property_dict[url]["Furnished"] = "No"
         
     try:
         property_dict[url]["Furnished"] = Raw_data_InDict["transaction"]["sale"]["isFurnished"]
     except KeyError:
         property_dict[url]["Furnished"] = None
+    
+    # open fire (yes/no)
+    
+    # terrace (yes/no) --> if yes: area
+    
+    # garden (yes/no) --> if yes: area
+    
+    # surface of the land
+    
+    # surface area of the plot of land
+    
+    # number of facades
+    
+    # swimming pool
+    
+    # state of the building (new, to be renovated, etc.)
+            
     return property_dict
     
 get_data()
