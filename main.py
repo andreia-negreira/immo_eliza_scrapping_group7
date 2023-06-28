@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import json
+import re
 
 def get_links():
     """
@@ -8,23 +10,31 @@ def get_links():
     s = requests.Session()
     listOfLinks = []
     listOfLinksFinal = []
-    pagesToSearch = 3 # set the number accordint to how many pages you want to sarch thru
+    pagesToSearch = 10 # set the number according to how many pages you want to sarch thru
+    propertiesToSearch = ["house","apartment"] # fill the list with propertis to search
 
-    for x in range(1,pagesToSearch+1):
-        search_url = f"https://www.immoweb.be/en/search/house/for-sale?countries=BE&priceType=SALE_PRICE&page={x}&orderBy=relevance"
-        r = s.get(search_url)
-        soup = BeautifulSoup(r.text,"html.parser")
-        for elem in soup.find_all("a", attrs={"class": "card__title-link"}):
-            listOfLinks.append(elem.get('href'))
-        listOfLinks = listOfLinks[0:30]
-        listOfLinksFinal = listOfLinksFinal + listOfLinks
-        listOfLinks.clear()
-    
+    for prop in propertiesToSearch:
+        for x in range(1,pagesToSearch+1): #houses
+            search_url = f"https://www.immoweb.be/en/search/{prop}/for-sale?countries=BE&priceType=SALE_PRICE&page={x}&orderBy=relevance"
+            r = s.get(search_url)
+            soup = BeautifulSoup(r.text,"html.parser")
+            for elem in soup.find_all("a", attrs = {"class": "card__title-link"}):
+                listOfLinks.append(elem.get('href'))
+            listOfLinks = listOfLinks[0:len(listOfLinks)-30]
+            listOfLinksFinal = listOfLinksFinal + listOfLinks
+            listOfLinks.clear()
     return(listOfLinksFinal)
-             
-def get_data():
-    """
-    Function to get data of individual houses
-    """
-get_links()
 
+links = get_links()
+
+
+"""
+def get_data():
+    url ="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
+    req = requests.get(url)
+    soup = BeautifulSoup(req.text, "html.parser")
+    data = soup.find('div',attrs = {"class":"container-main-content"}).script.text
+    test = re.findall(r"window.classified = ({.*})", data)
+    result = json.loads(test[0]) # Data dictionary 
+    return result
+"""
