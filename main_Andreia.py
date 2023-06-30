@@ -152,14 +152,15 @@ def get_data():
     
 get_data()
 
-def save():
+data_immo = {}
+def save(new_data):
         '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
-        data_immo = get_data()
+        global data_immo
+        data_immo.update(new_data)
         dataframe_immo = pd.DataFrame(data_immo)
-        dataset_csv = dataframe_immo.to_csv("./dataset-immo.csv", sep=" ", index=False)
-        return dataset_csv
+        dataframe_immo.to_csv("./dataset-immo.csv", sep=" ", index=False)
+        return dataframe_immo
     
-
 save()
     
 '''
