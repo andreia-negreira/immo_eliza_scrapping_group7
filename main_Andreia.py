@@ -95,15 +95,10 @@ def get_data():
         property_dict[url]["Equipped kitchen"] = "No"
         
     try:
-        if bool(Raw_data_InDict["transaction"]["sale"]["isFurnished"]):
+        if bool(Raw_data_InDict["property"]["transaction"]["sale"]["isFurnished"]):
             property_dict[url]["Furnished"] = "Yes"
     except KeyError:
         property_dict[url]["Furnished"] = "No"
-        
-    try:
-        property_dict[url]["Furnished"] = Raw_data_InDict["transaction"]["sale"]["isFurnished"]
-    except KeyError:
-        property_dict[url]["Furnished"] = None
     
     try:
         if bool(Raw_data_InDict["fireplaceExists"]):
