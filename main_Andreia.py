@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 import json
 import re
 import pandas as pd
+import csv
 
 root_url = "https://www.immoweb.be/en/search/house/for-sale?countries=BE&priceType=SALE_PRICE&page=1&orderBy=relevance"
 range_links = range(1, 12)
@@ -150,16 +151,22 @@ get_data()
 data_immo = {}
 def save(new_data):
         '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
-        global data_immo
+        def save(new_data):
+            with open("./dataset-immo.csv", 'a', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=new_data.keys())
+                writer.writeheader()
+                writer.writerow(new_data)
+            return writer
+
+save()
+    
+'''
+global data_immo
         data_immo.update(new_data)
         dataframe_immo = pd.DataFrame(data_immo)
         dataframe_immo.to_csv("./dataset-immo.csv", sep=" ", index=False)
         return dataframe_immo
-    
-save()
-    
-'''
-
+        
 def test():
     url_test = "https://www.immoweb.be/en/search-results/house/for-sale?customerIds=3151988&page=1&orderBy=newest"
     req_test = requests.get(url_test).json()
