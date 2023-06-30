@@ -148,19 +148,18 @@ def get_data():
     
 get_data()
 
-data_immo = {}
 def save(new_data):
         '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
-        def save(new_data):
-            with open("./dataset-immo.csv", 'a', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=new_data.keys())
-                writer.writeheader()
-                writer.writerow(new_data)
+        with open("./dataset-immo.csv", 'a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=new_data.keys())
+            writer.writeheader()
+            writer.writerow(new_data)
             return writer
 
 save()
     
 '''
+data_immo = {}
 global data_immo
         data_immo.update(new_data)
         dataframe_immo = pd.DataFrame(data_immo)
