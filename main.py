@@ -3,6 +3,10 @@ import requests
 import json
 import re
 import pandas as pd
+import concurrent
+from concurrent.futures import ThreadPoolExecutor,ProcessPoolExecutor, as_completed
+import time
+import csv
 
 def get_links(pagesToSearch=1):
     """
@@ -26,8 +30,9 @@ def get_links(pagesToSearch=1):
             listOfLinksFinal = listOfLinksFinal + listOfLinks
             listOfLinks.clear()
     return(listOfLinksFinal)
-#with open('links.txt','w+') as file:
-#    file.write('\n'.join(links))
+
+"""with open('links.txt','w+') as file:
+    file.write('\n'.join(links))"""
 
 def get_data(url):
     #url="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
@@ -84,17 +89,14 @@ def get_data(url):
             property_dict[url]["Equipped kitchen"] = "Yes"
     except KeyError:
         property_dict[url]["Equipped kitchen"] = "No"
-        
+    except TypeError: #added this except for NoneType' object is not subscriptable
+        property_dict[url]["Equipped kitchen"] = "No"
+
     try:
-        if bool(Raw_data_InDict["transaction"]["sale"]["isFurnished"]):
+        if bool(Raw_data_InDict["property"]["transaction"]["sale"]["isFurnished"]):
             property_dict[url]["Furnished"] = "Yes"
     except KeyError:
         property_dict[url]["Furnished"] = "No"
-        
-    try:
-        property_dict[url]["Furnished"] = Raw_data_InDict["transaction"]["sale"]["isFurnished"]
-    except KeyError:
-        property_dict[url]["Furnished"] = None
     
     try:
         if bool(Raw_data_InDict["fireplaceExists"]):
@@ -120,7 +122,7 @@ def get_data(url):
         property_dict[url]["Land Surface"] = Raw_data_InDict["property"]["land"]["surface"]
     except KeyError:
         property_dict[url]["Land Surface"] = None
-    except TypeError: # had to add this otherwise I was getting TypeError 'NoneType' object is not subscriptable
+    except TypeError: #added this except for NoneType' object is not subscriptable
         property_dict[url]["Land Surface"] = None
     
     # surface area of the plot of land
@@ -141,22 +143,27 @@ def get_data(url):
     except KeyError:
         property_dict[url]["State Building"] = None
             
-    return property_dict   
+    return property_dict
 
-def save(data_immo):
-        '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
-        #data_immo = get_data()
-        dataframe_immo = pd.DataFrame(data_immo)
-        dataset_csv = dataframe_immo.to_csv("./dataset-immo.csv", sep=" ", index=False)
-        return dataset_csv
+data_immo = {}
+def save(new_data):
+    '''This function saves the information acquired from the previous functions and store them in a csv file in the disk.'''
+    with open("./dataset-immo.csv", 'a', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=new_data.keys())
+        writer.writeheader()
+        writer.writerow(new_data)
+    return writer
 
-links = ['https://www.immoweb.be/en/classified/apartment/for-sale/schaerbeek/1030/10666536',
- 'https://www.immoweb.be/en/classified/apartment/for-sale/schaerbeek/1030/10666535',
- 'https://www.immoweb.be/en/classified/duplex/for-sale/drongen/9031/10666607']
+start = time.time()
+links = get_links(1)
+end = time.time()
+print("Gathering links time: {:.6f}s".format(end-start))
 
-for link in links:
-    print(link)
-    dictionary = get_data(link)
-    print(dictionary)
-    
-save(dictionary)
+start = time.time()
+with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    futures = [executor.submit(get_data, link) for link in links]
+    for future in concurrent.futures.as_completed(futures):
+        #print(future.result())
+        save(future.result())        
+end = time.time()
+print("Time taken for gathering data from {} links: {:.6f}s".format(len(links),end-start))
