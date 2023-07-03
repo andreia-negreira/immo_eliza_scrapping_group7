@@ -42,8 +42,10 @@ class Immo_Scrapper:
         #url="https://www.immoweb.be/en/classified/house/for-sale/lede/9340/10660142"
         s = requests.Session()
         req= s.get(url)
+        cookies = req.cookies.get_dict()
+        req_cookies = requests.Session.get(req, cookies=cookies)
 
-        soup= BeautifulSoup(req.text, "html.parser")
+        soup= BeautifulSoup(req_cookies.text, "html.parser")
         data = soup.find('div',attrs={"class":"container-main-content"}).script.text
 
         Raw_data_InList= re.findall(r"window.classified = (\{.*\})", data)
