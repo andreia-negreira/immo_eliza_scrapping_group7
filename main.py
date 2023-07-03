@@ -181,14 +181,14 @@ def save(new_data):
     return writer
 
 start = time.time()
-links = get_links(84)
+links = get_links(167)
 end = time.time()
 print("Gathering links time: {:.6f}s".format(end-start))
-
+"""
 start = time.time()
 with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
     futures = [executor.submit(get_data, link) for link in links]
     for future in concurrent.futures.as_completed(futures):
         save(future.result())        
 end = time.time()
-print("Time taken for gathering data from {} links: {:.6f}s".format(len(links),end-start))
+print("Time taken for gathering data from {} links: {:.6f}s".format(len(links),end-start))"""
