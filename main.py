@@ -1,11 +1,11 @@
-from immo_eliza_scrapping_group7.Content.dataset_immo_scrapper import Immo_Scrapper
+from Content.dataset_immo_scrapper import Immo_Scrapper
 import time
 import concurrent
 
 immo = Immo_Scrapper()
 
 start = time.time()
-links = immo.get_links(167)
+links = immo.get_links()
 end = time.time()
 print("Gathering links time: {:.6f}s".format(end-start))
 
