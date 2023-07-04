@@ -5,7 +5,7 @@ import concurrent
 immo = Immo_Scrapper()
 
 start = time.time()
-links = immo.get_links()
+links = immo.get_links(167)
 end = time.time()
 print("Gathering links time: {:.6f}s".format(end-start))
 
