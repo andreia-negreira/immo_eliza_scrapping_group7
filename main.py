@@ -1,4 +1,4 @@
-from Content.dataset_immo_scrapper import Immo_Scrapper
+from Src.dataset_immo_scrapper import Immo_Scrapper
 import time
 import concurrent
 

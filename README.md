@@ -6,7 +6,7 @@ This project aims to create an AI model that can estimate the value of a propert
 
 ### Part 1: Data Acquisition
 
-The first part of the project involves acquiring a dataset of houses and apartments for sale in Belgium. The dataset comprises information from approximately 15,000 properties. The dataset will serve as the foundation for training and evaluating the AI model.
+The first part of the project involves acquiring a dataset of houses and apartments for sale in Belgium. The dataset comprises information from approximately 10,000 properties. The dataset will serve as the foundation for training and evaluating the AI model.
 
 #### Part 1: Installation and Usage
 
@@ -15,18 +15,6 @@ The first part of the project involves acquiring a dataset of houses and apartme
 3. Run the main.py in a Python environment;
 4. The information will start to be retrieved;
 5. Check the dataset in the new document dataset-immo.csv.
-
-### Part 2: Data Preprocessing
-
-Update on: 07/07/2023
-
-### Part 3: Model Training
-
-Update on: 14/07/2023
-
-### Part 4: Property Valuation
-
-Update on: 21/07/2023
 
 #### Aclnowldgments
 
