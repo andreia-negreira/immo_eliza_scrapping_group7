@@ -99,6 +99,8 @@ def get_data(url):
     try:
         if bool(Raw_data_InDict["property"]["kitchen"]['type']):
             property_dict["equipped_kitchen"] = 1
+        else:
+            property_dict["equipped_kitchen"] = 0
     except KeyError:
         property_dict["equipped_kitchen"] = 0
     except TypeError: #added this except for NoneType' object is not subscriptable
