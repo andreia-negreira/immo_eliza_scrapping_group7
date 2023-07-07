@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ac64874-28b8-4a02-91d5-6e148692f562" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/immo_eliza_scrapping_group7.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/immo_eliza_scrapping_group7.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="4ac64874-28b8-4a02-91d5-6e148692f562" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +44,7 @@
       <updated>1688649920554</updated>
       <workItem from="1688649925059" duration="2995000" />
       <workItem from="1688653176697" duration="1137000" />
-      <workItem from="1688713469717" duration="10703000" />
+      <workItem from="1688713469717" duration="10706000" />
     </task>
     <servers />
   </component>
